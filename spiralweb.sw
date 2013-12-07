@@ -296,7 +296,7 @@ future.
 
 @code Weave Method
 def weave(self, chunks=None):
-    backend = PandocMarkdownBackend()
+    backend = MarkdownBackend()
 
     outputs = self.resolveDocumentation()
     backend.output(outputs, chunks)
@@ -462,24 +462,14 @@ a little more work. We will format them for Markdown as delimited code
 blocks.
 
 @code SpiralWeb class definitions
-class PandocMarkdownBackend(SpiralWebBackend):
+class MarkdownBackend(SpiralWebBackend):
     def formatDoc(self, chunk):
         lines = [self.dispatchChunk(x) for x in chunk.lines] 
         return ''.join(lines)
 
     def formatCode(self, chunk):
-        leader = "~~~~~~~~~~~~~~~~~"
-        options = ''
-
-        if chunk.options.get('lang') != None:
-            options = '{.%(language)s .numberLines}' % \
-                {'language': chunk.options.get('lang')}
-
         lines = [self.dispatchChunk(x) for x in chunk.lines]
-
-        return "%(leader)s%(options)s\n%(code)s%(trailer)s\n" % \
-            {"leader": leader, "code": ''.join(lines),
-             "trailer": leader, "options": options}
+	return ''.join(lines)
 
     def formatRef(self, chunk):
         return "<%(name)s>" % {"name": chunk.name}
